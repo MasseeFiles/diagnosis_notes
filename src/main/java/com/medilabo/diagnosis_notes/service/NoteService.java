@@ -18,7 +18,7 @@ public class NoteService {
         return noteRepository.findByCustomId(customId);
     }
 
-    public void create(Note noteToSave) {
+    public void createNote(Note noteToSave) {
         noteRepository.save(noteToSave);
     }
 }
