@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NoteRepository extends MongoRepository<Note, Long> {
+public interface NoteRepository extends MongoRepository<Note, String> {
     @Query("{ 'customId': ?0 }")    //JSON-based query string - field : value
-    List<Note> findByCustomId(Long customId);   //derived query (requete deduite) : spring implemente la methode en fonction de son nom (customID)
+    List<Note> findNoteByCustomId(Long customId);   //derived query (requete deduite) : spring implemente la methode en fonction de son nom (customID)
+
 }
 
 

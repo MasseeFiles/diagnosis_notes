@@ -12,9 +12,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "notes")
 public class Note {
     @Id
-    private Long id;
-    private Long customId;      //permet d'attribuer plusieurs noteField à un id dans la base MongoDb
+    private String id;
+    private Long customId;      //permet d'attribuer plusieurs noteField à un id dans la base MongoDb - doit correspondre au patientID
     private String noteField;
+
+    public Note(Long customId, String noteField) {
+        this.customId = customId;
+        this.noteField = noteField;
+    }
 }
 
 

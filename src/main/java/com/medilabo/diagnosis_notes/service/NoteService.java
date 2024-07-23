@@ -14,11 +14,12 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
-    public List<Note> findAllByCustomId(Long customId) {
-        return noteRepository.findByCustomId(customId);
+    public List<Note> findNoteByPatientId(Long customId) {       //customId permet d'avoir en base plusieurs notes liées à un Id
+        return noteRepository.findNoteByCustomId(customId);
     }
 
     public void createNote(Note noteToSave) {
         noteRepository.save(noteToSave);
     }
+
 }

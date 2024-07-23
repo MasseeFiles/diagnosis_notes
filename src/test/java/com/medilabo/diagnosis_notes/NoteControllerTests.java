@@ -1,6 +1,5 @@
 package com.medilabo.diagnosis_notes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.diagnosis_notes.model.Note;
 import com.medilabo.diagnosis_notes.service.NoteService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -29,19 +29,19 @@ public class NoteControllerTests {
     private NoteService noteService;
 
     @Test
-    void getAllByCustomId_Ok() throws Exception {
+    void findNoteByPatientId_Ok() throws Exception {
         //GIVEN
         Note[] noteArray = new Note[1];
-        noteArray[0] = new Note(1L, 1L, "Le patient déclare qu'il 'se sent très bien' Poids égal ou inférieur au poids recommandé");
+        noteArray[0] = new Note(1L, "Le patient déclare qu'il 'se sent très bien' Poids égal ou inférieur au poids recommandé");
         List<Note> noteListTest = new ArrayList<>((Arrays.asList(noteArray)));
 
-        when(noteService.findAllByCustomId(1L)).thenReturn(noteListTest);
+        when(noteService.findNoteByPatientId(1L)).thenReturn(noteListTest);
 
         Long idTest = 1L;
 
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/{id}", idTest)
+                        .get("/note/{id}", idTest)
                 )
         //THEN
                 .andExpect(MockMvcResultMatchers
@@ -50,21 +50,21 @@ public class NoteControllerTests {
     }
 
     @Test
-    void getAllByCustomId_CustomIdNotInDB() throws Exception {
+    void findNoteByPatientId_CustomIdNotInDB() throws Exception {
         //GIVEN
-        Note[] noteArray = new Note[2];
-        noteArray[0] = new Note(1L, 1L, "Le patient déclare qu'il 'se sent très bien' Poids égal ou inférieur au poids recommandé");
+        Note[] noteArray = new Note[1];
+        noteArray[0] = new Note(1L, "Le patient déclare qu'il 'se sent très bien' Poids égal ou inférieur au poids recommandé");
         List<Note> noteListTest = new ArrayList<>((Arrays.asList(noteArray)));
 
-        when(noteService.findAllByCustomId(1L)).thenReturn(noteListTest);
+        when(noteService.findNoteByPatientId(1L)).thenReturn(noteListTest);
 
         Long idTest = 10L;
 
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/{id}", idTest)
+                        .get("/note/{id}", idTest)
                 )
-        //THEN
+                //THEN
                 .andExpect(MockMvcResultMatchers
                         .status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
@@ -73,19 +73,18 @@ public class NoteControllerTests {
     @Test
     void createNote_Ok() throws Exception {
         //GIVEN
-        Note noteToCreateTest = new Note(1L, 1L, "NoteTest");
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(noteToCreateTest);
-
+        Long id = 1L;
+        String noteField = "note test";
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("")
+                        .post("/note/add/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonString))
-        //THEN
+                        .content(noteField))
+                //THEN
                 .andExpect(MockMvcResultMatchers
                         .status().isOk());
 
-        Mockito.verify(noteService).createNote(noteToCreateTest);
+        Mockito.verify(noteService).createNote(any(Note.class));
     }
+
 }
