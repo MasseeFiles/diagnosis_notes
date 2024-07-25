@@ -35,16 +35,8 @@ public class NoteController {
         logger.info("Requete pour persister une note en base");
 
         Note noteToCreate = new Note();
-//        Long customIdDto = noteDto.getCustomIdDto();
-//        String noteFieldDto = noteDto.getNoteFieldDto();
-
         noteToCreate.setCustomId(id);
         noteToCreate.setNoteField(noteField);
-//        noteToCreate.setNoteField(noteDto);
-
-
-//        System.out.println(customIdDto);
-//        System.out.println(noteFieldDto);
 
         noteService.createNote(noteToCreate);
     }
