@@ -29,7 +29,7 @@ WORKDIR /diagnosis_note
 COPY --from=build /diagnosis_note/target/diagnosis_notes-0.0.1-SNAPSHOT.jar diagnosis_note.jar
 
 # Exposition du port d'accès à l'appli
-EXPOSE 8081
+EXPOSE 8083
 
 #RUN de l'appli (par defaut au demarrage du container)
 ENTRYPOINT ["java", "-Dspring.config.location=classpath:/application.properties", "-jar", "diagnosis_note.jar"]

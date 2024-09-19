@@ -6,6 +6,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * La methode findNoteByPatientId passe au repository l'Id du client reçu du controller
+ * en tant que customId (attribut de chaque note permettant le lien à un patient unique dans la base MongoDb)
+ * @see Note
+ */
 @Service
 public class NoteService {
     private final NoteRepository noteRepository;
@@ -14,7 +19,7 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
-    public List<Note> findNoteByPatientId(Long customId) {       //customId permet d'avoir en base plusieurs notes liées à un Id
+    public List<Note> findNoteByPatientId(Long customId) {
         return noteRepository.findNoteByCustomId(customId);
     }
 
@@ -23,3 +28,4 @@ public class NoteService {
     }
 
 }
+

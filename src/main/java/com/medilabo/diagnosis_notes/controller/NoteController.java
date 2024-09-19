@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/note")
+@RequestMapping("/notes")
 public class NoteController {
 
     private static final Logger logger = LogManager.getLogger("NoteController");
@@ -26,7 +26,7 @@ public class NoteController {
         return noteService.findNoteByPatientId(id);
     }
 
-    @PostMapping("/add/{id}")
+    @PostMapping("/{id}")
     public void createNote(
             @PathVariable("id") Long id,
             @RequestBody String noteField
@@ -40,4 +40,5 @@ public class NoteController {
 
         noteService.createNote(noteToCreate);
     }
+
 }
