@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * findNoteByCustomId est implementée directement par Spring en fonction de
+ * La methode findNoteByCustomId est implementée directement par Spring en fonction de
  * son nom (requete deduite: derived query)
  * L'annotation @Query permet de définir dynamiquement une requete basée sur un format JSON
  * (attribut : customId)
