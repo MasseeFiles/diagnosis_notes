@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,33 +15,44 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Filter responsable de la gestion des tokens JWT transmis par les requetes HTTP entrantes.
+ *
+ * Il permet de vérifier si un token JWT est présent dans le Authorization header de la requete,
+ * de le valider, et de retourner un objet Authentication dans le SecurityContextHolder
+ * basé sur les claims du token.
+ *
+ * @see JwtUtil
+ */
 @Component
-public class JwtAuthenticationFilter3 extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LogManager.getLogger("JwtAuthenticationFilter");
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    //a mettre dans application.propoerties ou une variable d'environnement
-    private final String jwtSecret = "9F44D4C546D4DA5B4mldkvmdjmwdjvmqlkdvqùlvùV%kjB4D9898881F3"; // Replace with your actual secret
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // Get JWT from Authorization header
         String authHeader = request.getHeader("Authorization");
-        System.out.println(authHeader);
 
-        //pas de token trouvé dans la requete
+        //JWT token non présent dans le header de la requete entrante
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+
+            logger.info("No bearer token found in incoming request");
+
             chain.doFilter(request, response);
             return;
         }
 
-        // token trouvé dans la requete
+        // JWT token présent dans le header de la requete entrante
         String jwt = authHeader.substring(7);
-        String username = jwtUtil.extractUsername(jwt);
-        if (jwtUtil.isTokenExpired(jwt)) {
+
+        logger.info("Bearer token found in incoming request: " + jwt);
+
+        if (jwtUtil.isTokenNotExpired(jwt)) {
             Authentication authentication = jwtUtil.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
